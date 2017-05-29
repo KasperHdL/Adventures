@@ -40,7 +40,6 @@ class Player{
                 return;
             }
 
-
             //position
             vec3 move_direction = vec3(0,0,0);
 
@@ -71,8 +70,6 @@ class Player{
             camera->view_transform = (eulerAngleX(entity->rotation.x) * eulerAngleY(entity->rotation.y)) * glm::translate(mat4(), -entity->position);
             camera->entity->position = entity->position;
             camera->entity->rotation = entity->rotation;
-
-
 
         }
  

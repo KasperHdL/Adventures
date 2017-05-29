@@ -105,69 +105,14 @@ vec4 light_function(vec3 position, vec3 normal, vec2 uv){
 
     }else if(light_position.w == 2){
         //spot
-
-        vec3 start = camera_position.xyz;
-        vec3 dir = position - start;
-
-
-
-        float l = length(dir);
-        int n = 0; 
-
-
-        dir = dir / l;
-
-        float p = 0;
-
-        result.r = 0;
-
-
         vec3 from_light = position - light_position.xyz;
 
         float spot = pow(max(dot(normalize(from_light), normalize(light_cone.xyz)),0), light_cone.w);
-        float dist = length(from_light);
 
+        float dist = length(from_light);
         float att = 1.0 / (light_attenuation.x + light_attenuation.y * dist + light_attenuation.z * dist * dist);
 
-        float shadow = 0;
-
         float i =  spot * att;
-
-        float f = 0;
-        while(p < l && n < 1000){
-
-            
-            vec3 pos = start + (p + (rand(uv * p * time) - 0.5f)* f * ray_att.w) * dir;
-
-            //calculate light for pos
-            from_light = pos - light_position.xyz;
-            dist = length(from_light);
-
-            spot = pow(max(dot(normalize(from_light), normalize(light_cone.xyz)),0), light_cone.w);
-            att = 1.0 / (light_attenuation.x + light_attenuation.y * dist + light_attenuation.z * dist * dist);
-
-            shadow = 0;
-
-            if(light_shadow_index >= 0)
-                shadow = calc_shadows(light_shadow_index, pos);
-
-            //add light
-            float c = spot * att * (1-shadow);
-            result.r += c;
-
-            //increment
-            f = ray_att.x + ray_att.y * p + ray_att.z * p * p;
-            p += f;
-            n++;
-        } 
-
-        //divide by num samples
-        result.r /= n;
-
-
-
-
-        from_light = position - light_position.xyz;
 
         light = vec4(-from_light.xyz, i);
 
@@ -207,9 +152,7 @@ void main(){
 
     //Calculate Frag
     float d = max(dot(normal, normalize(light.xyz)), 0.0);
-    vec3 diffuse = d * (light_color.rgb * light_color.a * light.w * (1 - shadow)) + (light_color.rgb * light_color.a * result.r);
-        //result.r is the volumetric light
-
+    vec3 diffuse = d * (light_color.rgb * light_color.a * light.w * (1 - shadow));
     
 
     vec3 spec = vec3(0);

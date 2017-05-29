@@ -57,8 +57,8 @@ file(GLOB_RECURSE FILES
     "src/*.hpp"
 )
 
-add_executable(Demo ${FILES})
-target_link_libraries(Demo ${EXTRA_LIBS})
+add_executable(Game ${FILES})
+target_link_libraries(Game ${EXTRA_LIBS})
 
 file(COPY data DESTINATION .)
 

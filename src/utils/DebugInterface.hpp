@@ -3,6 +3,8 @@
 #include "SDL.h"
 #include <string>
 
+#include "Timer.hpp"
+
 #include "../God.hpp"
 #include "../Game.hpp"
 #include "../Input.hpp"
@@ -24,9 +26,55 @@ class DebugInterface{
         //plots
         static const int array_length = 500;
         int array_index = 0;
-        float delta_time_plot[array_length] = {};
-        float delta_time_sum = 0;
 
+            //delta
+            float delta_time_plot[array_length] = {};
+            float delta_time_sum = 0;
+
+            //update
+            float update_plot[array_length] = {};
+            float update_sum = 0;
+            Timer update_timer;
+            
+            //create shadow map
+            float shadow_map_plot[array_length] = {};
+            float shadow_map_sum = 0;
+            Timer shadow_map_timer;
+
+            //write opaque objects
+            float opaque_write_plot[array_length] = {};
+            float opaque_write_sum = 0;
+            Timer opaque_timer;
+
+            //Stencil Light Calculation
+            float stencil_light_plot[array_length] = {};
+            float stencil_light_sum = 0;
+            Timer stencil_light_timer;
+
+            //Light 
+            float light_calc_plot[array_length] = {};
+            float light_calc_sum = 0;
+            Timer light_calc_timer;
+
+            //Post
+            float post_processing_plot[array_length] = {};
+            float post_processing_sum = 0;
+            Timer post_processing_timer;
+
+            //Debug Draw
+            float debug_draw_plot[array_length] = {};
+            float debug_draw_sum = 0;
+            Timer debug_draw_timer;
+
+            //debug ui
+            float debug_ui_plot[array_length] = {};
+            float debug_ui_sum = 0;
+            Timer debug_ui_timer;
+
+            //swap buffer
+            float swap_buffer_plot[array_length] = {};
+            float swap_buffer_sum = 0;
+            Timer swap_buffer_timer;
         //fog
         float fog_intensity = 0.004;
         vec3 fog_color = vec3(.3f, .4f, .3f);
@@ -133,18 +181,52 @@ class DebugInterface{
                         ImGui::DragFloat3("[3]", &kernel[6]);
                         ImGui::Separator();
 
-                        //DT Plot
+                        //PLOTS
                         
-                        delta_time_sum -= delta_time_plot[array_index];
-                        delta_time_plot[array_index] = dt;
-                        delta_time_sum += delta_time_plot[array_index];
-
+                        update_plots(dt);
 
                         ImGui::Separator();
 
                         ImGui::Text("Delta time in ms");
                         ImGui::PlotLines("", delta_time_plot, array_length);
                         ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * dt, (1000 * delta_time_sum) / (double)array_length);
+
+
+                        ImGui::Text("Update in ms");
+                        ImGui::PlotLines("", update_plot, array_length);
+                        ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * update_timer.duration, (1000 * update_sum) / (double)array_length);
+
+                        ImGui::Text("Shadow Map in ms");
+                        ImGui::PlotLines("", shadow_map_plot, array_length);
+                        ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * shadow_map_timer.duration, (1000 * shadow_map_sum) / (double)array_length);
+
+                        ImGui::Text("Opaque Write in ms");
+                        ImGui::PlotLines("", opaque_write_plot, array_length);
+                        ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * opaque_timer.duration, (1000 * opaque_write_sum) / (double)array_length);
+
+                        ImGui::Text("Stencil Light Calc in ms");
+                        ImGui::PlotLines("", stencil_light_plot, array_length);
+                        ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * stencil_light_timer.duration, (1000 * stencil_light_sum) / (double)array_length);
+
+                        ImGui::Text("Light Calculation in ms");
+                        ImGui::PlotLines("", light_calc_plot, array_length);
+                        ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * light_calc_timer.duration, (1000 * light_calc_sum) / (double)array_length);
+
+                        ImGui::Text("Post Processing in ms");
+                        ImGui::PlotLines("", post_processing_plot, array_length);
+                        ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * post_processing_timer.duration, (1000 * post_processing_sum) / (double)array_length);
+
+                        ImGui::Text("Debug Draw in ms");
+                        ImGui::PlotLines("", debug_draw_plot, array_length);
+                        ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * debug_draw_timer.duration, (1000 * debug_draw_sum) / (double)array_length);
+
+                        ImGui::Text("Debug UI in ms");
+                        ImGui::PlotLines("", debug_ui_plot, array_length);
+                        ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * debug_ui_timer.duration, (1000 * debug_ui_sum) / (double)array_length);
+
+                        ImGui::Text("Swap Buffer in ms");
+                        ImGui::PlotLines("", swap_buffer_plot, array_length);
+                        ImGui::Text("%3.3f \t- Avg: %3.3f",1000 * swap_buffer_timer.duration, (1000 * swap_buffer_sum) / (double)array_length);
 
                         array_index = ++array_index % array_length;
 
@@ -241,6 +323,49 @@ class DebugInterface{
                 e->scale = glm::vec3(1,1,1);
                 e->rotation = glm::vec3();
             }
+        }
+
+        void update_plots(float dt){
+            
+            delta_time_sum -= delta_time_plot[array_index];
+            delta_time_plot[array_index] = dt;
+            delta_time_sum += delta_time_plot[array_index];
+
+            update_sum -= update_plot[array_index];
+            update_plot[array_index] = update_timer.duration;
+            update_sum += update_plot[array_index];
+
+            shadow_map_sum -= shadow_map_plot[array_index];
+            shadow_map_plot[array_index] = shadow_map_timer.duration;
+            shadow_map_sum += shadow_map_plot[array_index];
+
+            opaque_write_sum -= opaque_write_plot[array_index];
+            opaque_write_plot[array_index] = opaque_timer.duration;
+            opaque_write_sum += opaque_write_plot[array_index];
+
+            stencil_light_sum -= stencil_light_plot[array_index];
+            stencil_light_plot[array_index] = stencil_light_timer.duration;
+            stencil_light_sum += stencil_light_plot[array_index];
+
+            light_calc_sum -= light_calc_plot[array_index];
+            light_calc_plot[array_index] = light_calc_timer.duration;
+            light_calc_sum += light_calc_plot[array_index];
+
+            post_processing_sum -= post_processing_plot[array_index];
+            post_processing_plot[array_index] = post_processing_timer.duration;
+            post_processing_sum += post_processing_plot[array_index];
+
+            debug_draw_sum -= debug_draw_plot[array_index];
+            debug_draw_plot[array_index] = debug_draw_timer.duration;
+            debug_draw_sum += debug_draw_plot[array_index];
+
+            debug_ui_sum -= debug_ui_plot[array_index];
+            debug_ui_plot[array_index] = debug_ui_timer.duration;
+            debug_ui_sum += debug_ui_plot[array_index];
+
+            swap_buffer_sum -= swap_buffer_plot[array_index];
+            swap_buffer_plot[array_index] = swap_buffer_timer.duration;
+            swap_buffer_sum += swap_buffer_plot[array_index];
         }
 
 };
