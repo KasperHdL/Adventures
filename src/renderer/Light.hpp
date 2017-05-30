@@ -5,7 +5,7 @@
 
 #include "Mesh.hpp"
 
-#include "../Input.hpp"
+#include "../utils/Input.hpp"
 
 class Light{
 private:

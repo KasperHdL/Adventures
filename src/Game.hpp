@@ -1,11 +1,12 @@
 #pragma once
 
 #include <string>
-#include "Engine.hpp"
-#include "utils/SceneLoader.hpp"
-#include "God.hpp"
 #include <vector>
-#include "Player.hpp"
+
+#include "Engine.hpp"
+#include "God.hpp"
+#include "utils/SceneLoader.hpp"
+#include "game/Player.hpp"
 
 
 class Game{
@@ -25,7 +26,7 @@ class Game{
             player->entity->rotation = vec3(0.15,6.5,0);
 
             SceneLoader::load_scene("standard.scene");
-            God::entities[God::entities.count-1]->specularity = 0;
+            God::entities[God::entities.count-1]->material.specularity = 0;
 
             Light* sun =  new (God::lights.create()) Light(Light::Type::Directional, vec3(0,-1,.25f), vec3(0,.1f,.5f), .15f);
             sun->set_ortho_scale(15);

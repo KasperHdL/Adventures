@@ -646,7 +646,7 @@ void Renderer::_render_scene(Shader* shader){
             glm::mat4 model_transform = t * a * s;
 
             shader->set_uniform("model", model_transform);
-            shader->set_uniform("color", vec4(vec3(e->color), e->specularity));
+            shader->set_uniform("color", vec4(vec3(e->material.tint), e->material.specularity));
 
             //draw mesh
             e->mesh->bind();

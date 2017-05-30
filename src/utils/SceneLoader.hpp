@@ -2,15 +2,17 @@
 #include <fstream>
 #include <string>
 
+#include "glm/glm.hpp"
+
+#include "DataPath.hpp"
+
 #include "../God.hpp"
 #include "../renderer/Mesh.hpp"
 #include "../renderer/Camera.hpp"
 #include "../renderer/Renderer.hpp"
 #include "../renderer/Light.hpp"
 
-#include "DataPath.hpp"
 
-#include "glm/glm.hpp"
 
 using namespace std;
 

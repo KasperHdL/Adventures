@@ -1,11 +1,11 @@
 #pragma once 
 
-#include "renderer/Renderer.hpp"
+#include "../renderer/Renderer.hpp"
+#include "../renderer/Camera.hpp"
 
 #include "Entity.hpp"
-#include "God.hpp" 
+#include "../God.hpp" 
 
-#include "renderer/Camera.hpp"
  
 #include <string> 
 #include <glm/gtx/euler_angles.hpp>
@@ -53,11 +53,15 @@ class Player{
                 move_direction += vec3(1,0,0);
             if(Input::get_key_down(SDL_SCANCODE_SPACE))
                 move_direction += vec3(0,1,0);
-            if(Input::get_key_down(SDL_SCANCODE_LSHIFT))
+            if(Input::get_key_down(SDL_SCANCODE_LCTRL))
                 move_direction += vec3(0,-1,0);
 
+            float s = speed;
+            if(Input::get_key_down(SDL_SCANCODE_LSHIFT))
+                s *= 3;
+
             if(move_direction != vec3(0,0,0))
-                entity->position += mat3(eulerAngleY(-entity->rotation.y)) * (normalize(move_direction) * speed * dt);
+                entity->position += mat3(eulerAngleY(-entity->rotation.y)) * (normalize(move_direction) * s * dt);
 
             //rotation
             vec2 delta_mouse = Input::get_mouse_delta();

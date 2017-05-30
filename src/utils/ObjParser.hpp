@@ -3,14 +3,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
+#include <string>
+#include <sstream>
 #include <vector>
 
 #include "../renderer/Mesh.hpp"
-
-
-#include <string>
-#include <sstream>
 #include "DataPath.hpp"
 
 

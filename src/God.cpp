@@ -1,5 +1,5 @@
 #include "God.hpp"
-#include "Entity.hpp"
+#include "game/Entity.hpp"
 #include "renderer/Light.hpp"
 #include "renderer/Camera.hpp"
 

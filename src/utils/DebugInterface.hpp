@@ -4,10 +4,10 @@
 #include <string>
 
 #include "Timer.hpp"
+#include "Input.hpp"
 
 #include "../God.hpp"
 #include "../Game.hpp"
-#include "../Input.hpp"
 
 #include "../renderer/imgui/imgui_impl_sdl_gl3.hpp"
 #include "../renderer/Mesh.hpp"
@@ -23,7 +23,7 @@ class DebugInterface{
         bool enabled = true;
         int n;
 
-        //plots
+        //profile plots
         static const int array_length = 500;
         int array_index = 0;
 
@@ -92,6 +92,7 @@ class DebugInterface{
         bool scene_manager = false;
         bool create = false;
         bool hotload_shader = true;
+        bool profiler = true;
 
         //windows
 
@@ -120,11 +121,13 @@ class DebugInterface{
                 enabled       = !enabled;
                 if(!menu && !hierarchy && scene_manager && !create) menu = true;
             }
-            if(Input::get_key_on_down(SDL_SCANCODE_F2))     menu          = !menu;
-            if(Input::get_key_on_down(SDL_SCANCODE_F3))     hierarchy     = !hierarchy;
-            if(Input::get_key_on_down(SDL_SCANCODE_F4))     scene_manager = !scene_manager;
-            if(Input::get_key_on_down(SDL_SCANCODE_F5))     create        = !create;
-            if(Input::get_key_on_down(SDL_SCANCODE_F6))     hotload_shader= !hotload_shader;
+
+            if(Input::get_key_on_down(SDL_SCANCODE_F2 ))     menu           = !menu;
+            if(Input::get_key_on_down(SDL_SCANCODE_F3 ))     hierarchy      = !hierarchy;
+            if(Input::get_key_on_down(SDL_SCANCODE_F4 ))     scene_manager  = !scene_manager;
+            if(Input::get_key_on_down(SDL_SCANCODE_F5 ))     create         = !create;
+            if(Input::get_key_on_down(SDL_SCANCODE_F6 ))     profiler       = !profiler;
+            if(Input::get_key_on_down(SDL_SCANCODE_F10))     hotload_shader = !hotload_shader;
 
         }
 
@@ -147,8 +150,9 @@ class DebugInterface{
                         ImGui::Checkbox("Hierarchy     [F3] ", &hierarchy);
                         ImGui::Checkbox("Scene Manager [F4] ", &scene_manager);
                         ImGui::Checkbox("Create Menu   [F5] ", &create);
+                        ImGui::Checkbox("Profiler      [F6] ", &profiler);
 
-                        ImGui::Checkbox("Hotload Shader[F6] ", &hotload_shader);
+                        ImGui::Checkbox("Hotload Shader[F10] ", &hotload_shader);
 
                         ImGui::Separator();
 
@@ -181,6 +185,11 @@ class DebugInterface{
                         ImGui::DragFloat3("[3]", &kernel[6]);
                         ImGui::Separator();
 
+                    ImGui::End();
+                }
+
+                if(profiler){
+                    ImGui::Begin("Profiler");
                         //PLOTS
                         
                         update_plots(dt);
@@ -231,6 +240,7 @@ class DebugInterface{
                         array_index = ++array_index % array_length;
 
                     ImGui::End();
+
                 }
 
                 //windows

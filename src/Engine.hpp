@@ -16,7 +16,7 @@
 #include "renderer/Renderer.hpp"
 
 //engine
-#include "Input.hpp"
+#include "utils/Input.hpp"
 #include "utils/AssetManager.hpp"
 
 class Game;
